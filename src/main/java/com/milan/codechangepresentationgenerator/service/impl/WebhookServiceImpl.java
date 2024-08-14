@@ -75,11 +75,9 @@ public class WebhookServiceImpl implements WebhookService {
 
         List<DiffResult> diffResults = diffService.computeDiff(fileNames, previousCommitSha, currentCommitSha,repoFullName);
 
-        // Create and save the presentation based on the diff results
         String presentationId = presentationService.createPresentation(diffResults, repoFullName, currentCommitSha);
         presentationService.savePresentation(presentationId);
 
-        // Notify the developer with the presentation download link
         notificationService.sendEmail("developer@example.com","", "Download your presentation at /download/" + presentationId);
         log.info("Webhook processed successfully for repository: {}", repoFullName);
     }
