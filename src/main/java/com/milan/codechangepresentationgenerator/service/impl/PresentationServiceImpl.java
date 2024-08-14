@@ -79,11 +79,22 @@ public class PresentationServiceImpl implements PresentationService {
             XSLFTextShape diffContent = diffSlide.createTextBox();
             diffContent.setAnchor(new Rectangle(50, 120, 600, 400));
 
-            XSLFTextParagraph diffContentParagraph = diffContent.addNewTextParagraph();
-            XSLFTextRun diffContentRun = diffContentParagraph.addNewTextRun();
-            diffContentRun.setText(formatChanges(result.getChanges()));
-            diffContentRun.setFontColor(new Color(0, 0, 0));
-            diffContentRun.setFontSize(12.0);
+            // Iterate through the changes and color them accordingly
+            for (String change : result.getChanges()) {
+                XSLFTextParagraph diffContentParagraph = diffContent.addNewTextParagraph();
+                XSLFTextRun diffContentRun = diffContentParagraph.addNewTextRun();
+
+                if (change.startsWith("+")) {
+                    diffContentRun.setFontColor(new Color(0, 128, 0)); // Green for added lines
+                } else if (change.startsWith("-")) {
+                    diffContentRun.setFontColor(new Color(255, 0, 0)); // Red for removed lines
+                } else {
+                    diffContentRun.setFontColor(new Color(0, 0, 0)); // Black for unchanged lines (if any)
+                }
+
+                diffContentRun.setText(change);
+                diffContentRun.setFontSize(12.0);
+            }
 
             diffContent.setTextAutofit(XSLFTextShape.TextAutofit.NORMAL);
             diffContent.setVerticalAlignment(VerticalAlignment.TOP);
@@ -100,6 +111,7 @@ public class PresentationServiceImpl implements PresentationService {
 
         return presentationId;
     }
+
 
     private String formatChanges(List<String> changes) {
         StringBuilder formattedChanges = new StringBuilder();
