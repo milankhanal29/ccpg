@@ -161,15 +161,20 @@ public class PresentationServiceImpl implements PresentationService {
         presentation.setData(pptData);
 
         presentationRepository.save(presentation);
+    }    private void ddd(String presentationId, byte[] pptData) {
+        Presentation presentation = new Presentation();
+        presentation.setId(presentationId);
+        log.info("Presentation id {}", presentationId);
+        presentation.setData(pptData);
+
+        presentationRepository.save(presentation);
     }
 
     @Override
     public byte[] getPresentation(Long id) {
         return new byte[0];
     }
-    public byte[] ss(Long id) {
-        return new byte[0];
-    }
+
 
     @Override
     public void savePresentation(String presentationId) {
