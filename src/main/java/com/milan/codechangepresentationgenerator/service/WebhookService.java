@@ -4,5 +4,5 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface WebhookService{
-    void processWebhook(Map<String, Object> payload) throws IOException;
+    void processWebhook(Map<String, Object> payload,String email) throws IOException;
 }

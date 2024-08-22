@@ -1,16 +1,18 @@
 package com.milan.codechangepresentationgenerator.service.shared;
 
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
-import java.util.Properties;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,42 +21,40 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class MailService {
 
-    @Value("${spring.mail.host}")
-    private String host;
-    @Value("${spring.mail.port}")
-    private Integer port;
-    @Value("${spring.mail.username}")
-    private String admin_email;
-    @Value("${spring.mail.password}")
-    private String password;
-    private final ExecutorService executorService= Executors.newCachedThreadPool();
+    private final JavaMailSender javaMailSender;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+
     public void sendEmail(String toEmail, String subject, String body) {
         executorService.submit(() -> {
-            JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-            mailSender.setHost(host);
-            mailSender.setPort(port);
-            mailSender.setUsername(admin_email);
-            mailSender.setPassword(password);
-            Properties props = mailSender.getJavaMailProperties();
-            props.put("mail.transport.protocol", "smtp");
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = null;
             try {
-                helper = new MimeMessageHelper(message, true);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-            try {
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setTo(toEmail);
                 helper.setSubject(subject);
                 helper.setText(body, true); // Use true to indicate HTML content
-                mailSender.send(message);
-                log.info("Message sent successfully");
+                javaMailSender.send(message);
+                log.info("Message sent successfully to {}", toEmail);
             } catch (MessagingException e) {
-                log.error("Failed to send email: " + e.getMessage(), e);
+                log.error("Failed to send email: {}", e.getMessage(), e);
             }
         });
+    }
+
+    public String loadTemplate(String templatePath, String... placeholders) {
+        try {
+            Resource resource = new ClassPathResource(templatePath);
+            String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+
+            // Replace placeholders in the template
+            for (int i = 0; i < placeholders.length; i += 2) {
+                String placeholder = placeholders[i];
+                String value = placeholders[i + 1];
+                template = template.replace(placeholder, value);
+            }
+
+            return template;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load email template", e);
+        }
     }
 }

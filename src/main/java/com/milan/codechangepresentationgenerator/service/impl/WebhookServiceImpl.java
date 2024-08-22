@@ -28,11 +28,10 @@ public class WebhookServiceImpl implements WebhookService {
     private NotificationService notificationService;
 
     @Autowired
-    private GitHub gitHub; // Make sure GitHub is correctly injected
+    private GitHub gitHub;
     @Override
-    public void processWebhook(Map<String, Object> payload) throws IOException {
+    public void processWebhook(Map<String, Object> payload, String email) throws IOException {
         log.info("Received GitHub webhook with payload");
-//        log.info("Received GitHub webhook with payload: {}", payload);
 
         if (!(payload instanceof Map)) {
             log.error("Payload is not a Map.");
@@ -73,13 +72,13 @@ public class WebhookServiceImpl implements WebhookService {
                 .map(GHCommit.File::getFileName)
                 .toList();
 
-        List<DiffResult> diffResults = diffService.computeDiff(fileNames, previousCommitSha, currentCommitSha,repoFullName);
+        List<DiffResult> diffResults = diffService.computeDiff(fileNames, previousCommitSha, currentCommitSha, repoFullName);
 
-        String presentationId = presentationService.createPresentation(diffResults, repoFullName, currentCommitSha);
+        String presentationId = presentationService.createPresentation(diffResults, repoFullName, currentCommitSha, email);
         presentationService.savePresentation(presentationId);
 
-        notificationService.sendEmail("developer@example.com","", "Download your presentation at /download/" + presentationId);
         log.info("Webhook processed successfully for repository: {}", repoFullName);
     }
+
 
 }
