@@ -15,5 +15,6 @@ import java.util.List;
 public class PresentationRequest {
     private String repoName;
     private String commitId;
+    private String emailToUse;
     private List<DiffResult> diffResults;
 }

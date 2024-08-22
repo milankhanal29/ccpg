@@ -27,10 +27,11 @@ public class PresentationController {
             // Extracting relevant data from the request
             String repoName = request.getRepoName();
             String commitId = request.getCommitId();
+            String emailToUse = request.getEmailToUse();
             List<DiffResult> diffResults = request.getDiffResults(); // Assuming it's a list of DiffResult objects
 
             // Delegate to the service for presentation creation
-            String presentationId = presentationService.createPresentation(diffResults, repoName, commitId);
+            String presentationId = presentationService.createPresentation(diffResults, repoName, commitId,emailToUse);
             return ResponseEntity.ok(presentationId);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating presentation: " + e.getMessage());

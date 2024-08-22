@@ -11,7 +11,7 @@ public interface PresentationService {
     Presentation generatePresentation(PresentationRequest request);
 
 
-    String createPresentation(List<DiffResult> diffResults, String repoName, String commitSha);
+    String createPresentation(List<DiffResult> diffResults, String repoName, String commitSha,String emailToUse);
     byte[] getPresentation(Long id);
 
     void savePresentation(String presentationId);

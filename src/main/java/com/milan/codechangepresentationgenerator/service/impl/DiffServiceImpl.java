@@ -17,7 +17,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -56,20 +58,45 @@ public class DiffServiceImpl implements DiffService {
 
             for (String fileName : fileNames) {
                 try {
-                    String oldContent = getFileContent(repository, previousCommitSha, fileName);
-                    String newContent = getFileContent(repository, currentCommitSha, fileName);
+                    // Fetch content for the file in both commits
+                    String oldContent = getFileContent(repository, previousCommit, fileName);
+                    String newContent = getFileContent(repository, currentCommit, fileName);
 
-                    if (oldContent == null || newContent == null) {
-                        continue;
+                    // If the file exists in both commits, compute the diff
+                    if (oldContent != null && newContent != null) {
+                        DiffResult result = compareFiles(oldContent, newContent);
+                        result.setFileName(fileName);
+                        results.add(result);
+                        log.info("Differences in file '{}':\n{}", fileName, result);
+                    } else if (oldContent == null && newContent != null) {
+                        // File was added in the current commit
+                        DiffResult result = new DiffResult();
+                        result.setFileName(fileName);
+                        result.setAddedContent(Arrays.asList(newContent.split("\n")));                        results.add(result);
+                        log.info("File '{}' was added:\n{}", fileName, result);
+                    } else if (oldContent != null && newContent == null) {
+                        // File was deleted in the current commit
+                        DiffResult result = new DiffResult();
+                        result.setFileName(fileName);
+                        result.setRemovedContent(Arrays.asList(oldContent.split("\n")));                        results.add(result);
+                        log.info("File '{}' was deleted:\n{}", fileName, result);
                     }
-
-                    DiffResult result = compareFiles(oldContent, newContent);
-                    result.setFileName(fileName);
-                    results.add(result);
-                    log.info("Differences in file '{}':\n{}", fileName, result);
                 } catch (IOException e) {
                     log.error("Error processing file '{}': {}", fileName, e.getMessage(), e);
-                    continue;
+                }
+            }
+
+            // Additional handling for new files in the current commit not present in previous
+            for (GHCommit.File file : currentCommit.getFiles()) {
+                String fileName = file.getFileName();
+                if (!fileNames.contains(fileName)) {
+                    String newContent = getFileContent(repository, currentCommit, fileName);
+                    if (newContent != null) {
+                        DiffResult result = new DiffResult();
+                        result.setFileName(fileName);
+                        result.setAddedContent(Arrays.asList(newContent.split("\n")));                        results.add(result);
+                        log.info("New file '{}' added in current commit:\n{}", fileName, result);
+                    }
                 }
             }
 
@@ -80,15 +107,14 @@ public class DiffServiceImpl implements DiffService {
         return results;
     }
 
-    private String getFileContent(GHRepository repository, String commitSha, String fileName) throws IOException {
-        GHCommit commit = repository.getCommit(commitSha);
+    private String getFileContent(GHRepository repository, GHCommit commit, String fileName) throws IOException {
         for (GHCommit.File file : commit.getFiles()) {
             if (file.getFileName().equals(fileName)) {
                 URL fileUrl = file.getRawUrl();
                 return fetchFileContent(fileUrl);
             }
         }
-        throw new IOException("File not found in commit: " + fileName);
+        return null;
     }
 
     private String fetchFileContent(URL fileUrl) throws IOException {
