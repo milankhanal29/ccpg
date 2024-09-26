@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h2>All Orders</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">User </th>
+      <th scope="col">service</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Transaction Code</th>
+      <th scope="col">Payment Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let order of orders">
+<!--      {{order.username}}-->
+      <td (click)="userDetails(order.userId)">view user </td>
+      <td>
+        <button class="btn" (click)="showProduct(order.orderDetailsList)">See Product</button>
+      </td>
+      <td>{{ order.totalPrice }}</td>
+      <td>{{ order.transactionCode }}</td>
+      <td>{{ order.paymentStatus }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

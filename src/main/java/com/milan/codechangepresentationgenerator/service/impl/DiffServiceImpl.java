@@ -2,7 +2,6 @@ package com.milan.codechangepresentationgenerator.service.impl;
 
 import com.milan.codechangepresentationgenerator.service.DiffService;
 import com.milan.codechangepresentationgenerator.util.DiffResult;
-import com.milan.codechangepresentationgenerator.util.MyersDiff;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.GHCommit;
@@ -32,8 +31,13 @@ public class DiffServiceImpl implements DiffService {
 
     @Override
     public DiffResult compareFiles(String oldContent, String newContent) {
-        MyersDiff myersDiff = new MyersDiff();
-        return myersDiff.diff(oldContent, newContent);
+        List<String> oldLines = Arrays.asList(oldContent.split("\n"));
+        List<String> newLines = Arrays.asList(newContent.split("\n"));
+        List<String> changes = calculateDiff(oldLines, newLines);
+
+        DiffResult result = new DiffResult();
+        result.setChanges(changes);
+        return result;
     }
 
     @Override
@@ -52,14 +56,15 @@ public class DiffServiceImpl implements DiffService {
         List<DiffResult> results = new ArrayList<>();
         try {
             GHRepository repository = github.getRepository(repoFullName);
-
-            GHCommit previousCommit = repository.getCommit(previousCommitSha);
             GHCommit currentCommit = repository.getCommit(currentCommitSha);
 
             for (String fileName : fileNames) {
                 try {
-                    // Fetch content for the file in both commits
-                    String oldContent = getFileContent(repository, previousCommit, fileName);
+                    // Fetch the last commit where the file was modified, before the current commit
+                    GHCommit lastModifiedCommit = findLastModifiedCommitBefore(repository, currentCommit, fileName);
+
+                    // Fetch content for the file in the last modified commit and current commit
+                    String oldContent = getFileContent(repository, lastModifiedCommit, fileName);
                     String newContent = getFileContent(repository, currentCommit, fileName);
 
                     // If the file exists in both commits, compute the diff
@@ -72,31 +77,19 @@ public class DiffServiceImpl implements DiffService {
                         // File was added in the current commit
                         DiffResult result = new DiffResult();
                         result.setFileName(fileName);
-                        result.setAddedContent(Arrays.asList(newContent.split("\n")));                        results.add(result);
+                        result.setAddedContent(Arrays.asList(newContent.split("\n")));
+                        results.add(result);
                         log.info("File '{}' was added:\n{}", fileName, result);
                     } else if (oldContent != null && newContent == null) {
                         // File was deleted in the current commit
                         DiffResult result = new DiffResult();
                         result.setFileName(fileName);
-                        result.setRemovedContent(Arrays.asList(oldContent.split("\n")));                        results.add(result);
+                        result.setRemovedContent(Arrays.asList(oldContent.split("\n")));
+                        results.add(result);
                         log.info("File '{}' was deleted:\n{}", fileName, result);
                     }
                 } catch (IOException e) {
                     log.error("Error processing file '{}': {}", fileName, e.getMessage(), e);
-                }
-            }
-
-            // Additional handling for new files in the current commit not present in previous
-            for (GHCommit.File file : currentCommit.getFiles()) {
-                String fileName = file.getFileName();
-                if (!fileNames.contains(fileName)) {
-                    String newContent = getFileContent(repository, currentCommit, fileName);
-                    if (newContent != null) {
-                        DiffResult result = new DiffResult();
-                        result.setFileName(fileName);
-                        result.setAddedContent(Arrays.asList(newContent.split("\n")));                        results.add(result);
-                        log.info("New file '{}' added in current commit:\n{}", fileName, result);
-                    }
                 }
             }
 
@@ -107,13 +100,78 @@ public class DiffServiceImpl implements DiffService {
         return results;
     }
 
+    private List<String> calculateDiff(List<String> oldLines, List<String> newLines) {
+        List<String> changes = new ArrayList<>();
+
+        int oldIndex = 0;
+        int newIndex = 0;
+
+        while (oldIndex < oldLines.size() || newIndex < newLines.size()) {
+            if (oldIndex < oldLines.size() && newIndex < newLines.size()) {
+                // Both lines exist, check for equality
+                if (oldLines.get(oldIndex).equals(newLines.get(newIndex))) {
+                    oldIndex++;
+                    newIndex++;
+                } else {
+                    // Check for the next matching line in newLines
+                    if (newIndex + 1 < newLines.size() && oldLines.get(oldIndex).equals(newLines.get(newIndex + 1))) {
+                        // Line was added
+                        changes.add("+ " + newLines.get(newIndex) + " : line " + (newIndex + 1));
+                        newIndex++;
+                    } else if (oldIndex + 1 < oldLines.size() && newLines.get(newIndex).equals(oldLines.get(oldIndex + 1))) {
+                        // Line was removed
+                        changes.add("- " + (oldIndex + 1) + "-" + (oldIndex + 2) + " : " + oldLines.get(oldIndex));
+                        oldIndex++;
+                    } else {
+                        // Both lines are different; record removal and addition
+                        changes.add("- " + (oldIndex + 1) + " : " + oldLines.get(oldIndex));
+                        changes.add("+ " + newLines.get(newIndex) + " : line " + (newIndex + 1) );
+                        oldIndex++;
+                        newIndex++;
+                    }
+                }
+            } else if (oldIndex < oldLines.size()) {
+                changes.add("- " + (oldIndex + 1) + " : " + oldLines.get(oldIndex));
+                oldIndex++;
+            } else if (newIndex < newLines.size()) {
+                changes.add("+ " + newLines.get(newIndex) + " : line " + (newIndex + 1) );
+                newIndex++;
+            }
+        }
+        return changes;
+    }
+
+    private GHCommit findLastModifiedCommitBefore(GHRepository repository, GHCommit currentCommit, String fileName) throws IOException {
+        GHCommit commit = currentCommit;
+        List<GHCommit> parents = commit.getParents();
+        if (!parents.isEmpty()) {
+            commit = parents.get(0);  // Move to the previous commit
+        }
+        while (commit != null) {
+            log.info("Checking commit '{}' for file '{}'", commit.getSHA1(), fileName);
+            for (GHCommit.File file : commit.getFiles()) {
+                if (file.getFileName().equals(fileName)) {
+                    log.info("Found last modification of '{}' in commit '{}'", fileName, commit.getSHA1());
+                    return commit;
+                }
+            }
+            parents = commit.getParents();
+            commit = (parents.isEmpty()) ? null : parents.get(0);
+        }
+        log.warn("No previous commit found where the file '{}' was modified", fileName);
+        return null;
+    }
+
     private String getFileContent(GHRepository repository, GHCommit commit, String fileName) throws IOException {
+        log.info("Fetching content for file '{}' in commit '{}'", fileName, commit.getSHA1());
         for (GHCommit.File file : commit.getFiles()) {
             if (file.getFileName().equals(fileName)) {
                 URL fileUrl = file.getRawUrl();
+                log.info("File URL: {}", fileUrl);
                 return fetchFileContent(fileUrl);
             }
         }
+        log.warn("No file content found for '{}'", fileName);
         return null;
     }
 

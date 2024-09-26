@@ -1,0 +1,36 @@
+<div *ngIf="receivedGifts.length === 0" class="no-gifts">
+  <p>No gifts Received yet.</p>
+  <i class="fa fa-gift" aria-hidden="true"></i>
+</div>
+<div *ngIf="receivedGifts.length > 0" class="sent-gifts">
+  <h2>Received Gifts</h2>
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Sender Name</th>
+      <th scope="col">Gift Name</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Message</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let gift of receivedGifts">
+      <td>{{ gift.senderName }}</td>
+      <td class="gift-name-container">
+        <span>{{ gift.orderDetailsList[0].productName }}</span>
+        <span  (click)="toggleAdditionalProducts(gift)">
+          <mat-icon>{{ gift.showAdditionalProducts ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </span>
+        <div *ngIf="gift.showAdditionalProducts">
+    <span *ngFor="let orderDetail of gift.orderDetailsList.slice(1)">
+      {{ orderDetail.productName }}
+    </span>
+        </div>
+      </td>
+
+      <td>NPR: {{ gift.totalPrice }}</td>
+      <td>{{ gift.message }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

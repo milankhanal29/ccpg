@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="text-center h1" style="color: #dc0eba; margin-bottom: 30px;">Easy Services</div>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 mt-2" *ngFor="let product of products">
+      <mat-card class="subscription-card" [ngClass]="{ 'out-of-stock': product.availableQuantity < 1 }">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image rounded-logo">
+            <img src="assets/image/logo.png" class="img img-fluid" alt="Logo">
+          </div>
+          <mat-card-title class="font-weight-bold">{{ product.productName }}</mat-card-title>
+        </mat-card-header>
+        <div class="img-container">
+          <img mat-card-image
+               (click)="openImageModal(product)"
+               [src]="product.decodedProductImage"
+               alt="Product Image"
+               class="img-fluid">
+          <div *ngIf="product.availableQuantity < 1" class="out-of-stock-overlay">Out of Stock</div>
+        </div>
+        <mat-card-content class="example-card-content">
+          <p class="product-description">{{ product.productDescription }}</p>
+          <mat-card-subtitle>NPR: {{ product.productPrice }}</mat-card-subtitle>
+        </mat-card-content>
+        <mat-card-actions class="d-flex justify-content-center" *ngIf="(userRole$ | async) !== 'admin'">
+          <button mat-raised-button color="primary" [disabled]="product.availableQuantity < 1" (click)="onGiftSubmit(product)">
+            Buy Subscription
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

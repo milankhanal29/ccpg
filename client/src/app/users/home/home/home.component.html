@@ -1,0 +1,6 @@
+<div *ngIf="(userRole$ | async) !== 'ADMIN'">
+<app-product></app-product>
+</div>
+<div *ngIf="(userRole$ | async) === 'ADMIN'">
+ <app-all-product></app-all-product>
+</div>

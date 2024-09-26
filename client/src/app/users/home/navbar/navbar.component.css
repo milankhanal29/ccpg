@@ -1,0 +1,10 @@
+.bg-gradients {
+  background: linear-gradient(to right, #c560d0, #f10606);
+  margin-bottom: 10px;
+}
+.nav-logo{
+  height: 30px;
+}
+.margin-left{
+  margin-right: 20px;
+}

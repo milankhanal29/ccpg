@@ -1,0 +1,67 @@
+.subscription-card {
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  margin: 20px 0; /* Spacing between cards */
+}
+
+.subscription-card:hover {
+  transform: translateY(-5px);
+}
+
+.img-container {
+  position: relative;
+}
+
+.img-fluid {
+  width: 100%;
+  height: auto;
+  max-height: 200px; /* Set max height to 200px */
+  border-radius: 10px;
+  object-fit: contain; /* Use 'contain' to prevent cutting */
+}
+
+
+.out-of-stock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 0, 0, 0.7);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  border-radius: 10px; /* Matches card */
+}
+
+.example-card-content {
+  padding: 16px;
+}
+
+.product-description {
+  font-size: 1.1em; /* Slightly larger font */
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.mat-card-title {
+  font-size: 1.5em;
+  color: #dc0eba; /* Title color */
+  margin-bottom: 10px;
+}
+
+.mat-card-subtitle {
+  font-size: 1.2em;
+  color: #555; /* Subtitle color */
+}
+
+.mat-raised-button {
+  font-size: 1.1em; /* Button text size */
+  padding: 10px 20px; /* Button padding */
+}

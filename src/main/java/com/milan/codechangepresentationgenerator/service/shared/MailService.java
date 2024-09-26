@@ -45,7 +45,6 @@ public class MailService {
             Resource resource = new ClassPathResource(templatePath);
             String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
 
-            // Replace placeholders in the template
             for (int i = 0; i < placeholders.length; i += 2) {
                 String placeholder = placeholders[i];
                 String value = placeholders[i + 1];

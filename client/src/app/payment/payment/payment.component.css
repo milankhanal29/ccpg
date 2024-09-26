@@ -1,0 +1,31 @@
+.form-row {
+  display: none;
+}
+
+.btn-primary {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
+.confirmation-box {
+  border: 0.5px solid #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin: 20px auto;
+}
+
+.confirmation-box h1 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.confirmation-box button {
+  width: 150px;
+}
+.confirmation-detail {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}

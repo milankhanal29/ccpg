@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xslf.usermodel.*;
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -19,6 +20,7 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -202,7 +204,8 @@ public class PresentationServiceImpl implements PresentationService {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ppt.write(out);
             byte[] pptData = out.toByteArray();
-            databaseService.savePresentation(presentationId, pptData);
+            LocalDateTime createdDate = LocalDateTime.now();
+            databaseService.savePresentation(presentationId, pptData,email,createdDate);
 
             String downloadLink = "http://localhost:8080/api/presentations/download/" + presentationId;
             notificationService.sendEmailWithLink(downloadLink, repoFullName, commitSha, email);
@@ -218,5 +221,14 @@ public class PresentationServiceImpl implements PresentationService {
     @Override
     public void savePresentation(String presentationId) {
         // Implementation pending
+    }
+
+    @Override
+    public List<Presentation> getPresentationsForUserEmail(String userEmail) {
+        return presentationRepository.findByUserEmail(userEmail, Sort.by(Sort.Direction.DESC, "createdAt"));    }
+
+    @Override
+    public void deletePresentation(String id) {
+        presentationRepository.deleteById(id);
     }
 }

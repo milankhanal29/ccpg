@@ -1,0 +1,55 @@
+<!--<pre>{{ subscriptions | json }}</pre>-->
+<div class="card mb-2" *ngFor="let subscription of subscriptions">
+  <div class="card text-center">
+    <div class="card-header">
+      <h5>Code Change Presentation Generator Service</h5>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Amount: NPR {{ subscription.totalPrice }}</h5>
+      <p class="card-text">{{ subscription.description }}</p>
+
+      <!-- Webhook Setup Instructions -->
+      <div *ngIf="webhookUrls[subscription.id]" class="webhook-setup">
+        <h5 class="mt-4">GitHub Webhook Setup</h5>
+        <p>To connect your GitHub repository to our service, please follow these steps:</p>
+        <ol class="list-unstyled">
+          <li><i class="fas fa-check-circle"></i> Go to your GitHub repository settings.</li>
+          <li><i class="fas fa-check-circle"></i> Navigate to <strong>Webhooks</strong> under the settings menu.</li>
+          <li><i class="fas fa-check-circle"></i> Click on <strong>Add webhook</strong>.</li>
+          <li>
+            In the <strong>Payload URL</strong> field, paste the following URL:
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control code-snippet"
+                [value]="webhookUrls[subscription.id]"
+                readonly
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="copyToClipboard(subscription.id)"
+                  title="Copy to clipboard"
+                  (mouseover)="tooltipVisible[subscription.id] = true"
+                  (mouseleave)="tooltipVisible[subscription.id] = false"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+                <div *ngIf="tooltipVisible[subscription.id]" class="tooltip">
+                  {{ tooltipMessage[subscription.id] }}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li><i class="fas fa-check-circle"></i> Select <strong>application/json</strong> as the content type.</li>
+          <li><i class="fas fa-check-circle"></i> Click on <strong>Add webhook</strong> to save.</li>
+        </ol>
+        <li *ngFor="let orderDetail of subscription.orderDetailsList">
+
+        <p>Expiry Date: {{ orderDetail.expiryDate | date:'yyyy-MM-dd' }}</p>
+          <p>Days Until Expiry: {{ calculateDaysUntilExpiry(orderDetail.expiryDate) }} days</p>
+        </li>
+    </div>
+  </div>
+  </div></div>

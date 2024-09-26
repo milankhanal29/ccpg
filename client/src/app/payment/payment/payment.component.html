@@ -1,0 +1,83 @@
+  <form [formGroup]="esewaForm" (ngSubmit)="submitMyFormBro()" class="row g-3">
+    <div class="form-row">
+
+    <div class="col-md-6">
+      <label for="amount" class="form-label">Amount</label>
+      <input type="text" class="form-control" id="amount" formControlName="amount" [value]="esewaForm.get('amount')?.value" required>
+    </div>
+    <div class="col-md-6">
+      <label for="tax_amount" class="form-label">Tax Amount</label>
+      <input type="text" class="form-control" id="tax_amount" formControlName="tax_amount" [value]="esewaForm.get('tax_amount')?.value"  required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="total_amount" class="form-label">Total Amount</label>
+      <input type="text" class="form-control" id="total_amount" formControlName="total_amount" [value]="esewaForm.get('total_amount')?.value" required>
+    </div>
+    <div class="col-md-6">
+      <label for="transaction_uuid" class="form-label">Transaction UUID</label>
+      <input type="text" class="form-control" id="transaction_uuid" formControlName="transaction_uuid" value="11-200-11" required>
+    </div>
+    <div class="col-md-12">
+      <label for="product_code" class="form-label">Product Code</label>
+      <input type="text" class="form-control" id="product_code" formControlName="product_code" value="EPAYTEST" required>
+    </div>
+    <div class="col-md-6">
+      <label for="product_service_charge" class="form-label">Product Service Charge</label>
+      <input type="text" class="form-control" id="product_service_charge" formControlName="product_service_charge" value="0" required>
+    </div>
+    <div class="col-md-6">
+      <label for="product_delivery_charge" class="form-label">Product Delivery Charge</label>
+      <input type="text" class="form-control" id="product_delivery_charge" formControlName="product_delivery_charge" value="0" required>
+    </div>
+    <div class="col-md-6">
+      <label for="success_url" class="form-label">Success URL</label>
+      <input type="text" class="form-control" id="success_url" formControlName="success_url" value="https://esewa.com.np" required>
+    </div>
+    <div class="col-md-6">
+      <label for="failure_url" class="form-label">Failure URL</label>
+      <input type="text" class="form-control" id="failure_url" formControlName="failure_url" value="https://google.com" required>
+    </div>
+    <div class="col-md-12">
+      <label for="signed_field_names" class="form-label">Signed Field Names</label>
+      <input type="text" class="form-control" id="signed_field_names" formControlName="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+    </div>
+    <div class="col-md-12">
+      <label for="signature" class="form-label">Signature</label>
+      <input type="text" class="form-control" id="signature" formControlName="signature" value="4Ov7pCI1zIOdwtV2BRMUNjz1upIlT/COTxfLhWvVurE=" required>
+    </div>
+
+    </div>
+    <div class="confirmation-box">
+      <h1>Are you sure you want to confirm the purchase of Rs {{orderDetail.totalPrice}}
+      </h1>
+      <div class="confirmation-details">
+        <div class="row">
+          <div class="col-6">
+            <p class="confirmation-detail"><b>Total Price:</b> Rs {{orderDetail.totalPrice}}</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="payment-options">
+        <button type="submit" class="btn">
+          <img src="assets/image/eSewaLogo.png" alt="Pay with eSewa" class="esewaLogo">
+        </button>
+        <p class="payment-text">Secure payment processed by eSewa pvt ltd</p>
+      </div>
+    </div>
+
+  </form>
+  <div class="form-row">
+    <div class="row mt-3">
+      <div class="col-md-6 offset-md-3">
+        <label for="secret" class="form-label">Secret Key</label>
+
+        <input type="text" class="form-control" id="secret" name="secret" value="8gBm/:&EnhH.1/q" class="form" required>
+      </div>>
+    </div>
+  </div>
+
+
+
+

@@ -1,0 +1,9 @@
+<div class="presentation-container">
+  <h2>Your Presentations</h2>
+  <div class="presentation-card" *ngFor="let presentation of presentations">
+    <h3>Presentation ID: {{ presentation.id }}</h3>
+    <p>User Email: {{ presentation.userEmail }}</p>
+    <p>Created At: {{ presentation.createdAt | date:'short' }}</p>
+    <button (click)="downloadPresentation(presentation.id)" class="download-button">Download</button>
+    <button (click)="deletePresentation(presentation.id)" class="delete-button m-2">Delete</button>  </div>
+</div>

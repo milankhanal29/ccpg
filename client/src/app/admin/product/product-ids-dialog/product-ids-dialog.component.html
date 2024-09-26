@@ -1,0 +1,16 @@
+<h2 mat-dialog-title class="dialog-title">Service IDs </h2>
+<div mat-dialog-content>
+  <ul class="product-list">
+    <li *ngFor="let productId of data.productIds; let i = index" class="product-item" (click)="showProductDetails(productId)">
+      <div class="product-info">
+        <div class="product-id">Product ID: {{ productId }}</div>
+      </div>
+      <div class="details-icon">
+        <mat-icon>info</mat-icon>
+      </div>
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" class="close-button">Close</button>
+</div>

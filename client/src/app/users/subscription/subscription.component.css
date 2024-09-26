@@ -1,0 +1,61 @@
+.card {
+  background-color: #282c34; /* Dark background */
+  color: #ffffff; /* Light text */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Rounded corners */
+  transition: transform 0.2s; /* Smooth hover effect */
+}
+
+.card:hover {
+  transform: scale(1.02); /* Slight zoom effect on hover */
+}
+
+.card-header {
+  background-color: #343a40; /* Slightly lighter dark for header */
+  border-bottom: 1px solid #495057; /* Subtle border */
+}
+
+.webhook-setup {
+  background-color: #1e1e1e; /* Dark background for setup instructions */
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center; /* Center items vertically */
+}
+
+.code-snippet {
+  background-color: #1e1e1e; /* Dark input background */
+  color: #f8f8f2; /* Light input text */
+  border: 1px solid #6272a4; /* Border color matching theme */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.code-snippet:focus {
+  outline: none; /* Remove outline on focus */
+  border-color: #50fa7b; /* Green border on focus */
+}
+
+.btn-outline-secondary {
+  border-color: #6272a4; /* Matching border color */
+}
+
+.btn-outline-secondary:hover {
+  background-color: #44475a; /* Darker on hover */
+}
+
+i.fas {
+  color: #50fa7b; /* Icon color */
+}
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  z-index: 1000; /* Ensure it appears above other elements */
+  transition: opacity 0.3s;
+}
