@@ -1,0 +1,38 @@
+<div class="checkout-container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+      <div class="products-container">
+        <div *ngFor="let product of products" class="checkout-item">
+          <img [src]="product.decodedProductImage" alt="{{ product.productName }}" class="product-image" />
+          <div class="product-details">
+            <h3>{{ product.productName }}</h3>
+            <p>{{ product.productDescription }}</p>
+            <p>{{ product.productPrice }}</p>
+          </div>
+        </div>
+        <div>
+          <h2>Order Summary</h2>
+          <p>Total Price: {{ calculateTotalPrice() }}</p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+      <div class="receiver-details-container mat-card">
+        <h2 class="mat-card-header">Order Details</h2>
+        <form class="receiver-form" [formGroup]="receiverForm" (ngSubmit)="submitOrder()">
+          <mat-card-content>
+            <p>Your order will be placed for yourself.</p>
+          </mat-card-content>
+          <mat-card-actions class="submit-button-container">
+            <button mat-raised-button color="primary" type="submit" [disabled]="isLoading" class="submit-order-button">
+              Submit Order
+            </button>
+          </mat-card-actions>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

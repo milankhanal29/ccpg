@@ -1,0 +1,30 @@
+<div class="profile-card">
+  <div class="profile-header">
+    <div class="profile-title">
+      <img src="/assets/image/logo.png" class="logo-img">
+      <button mat-button mat-dialog-close class="close-button btn">Close</button>
+    </div>
+    <div class="profile-content">
+      <div class="profile-image-container">
+        <label for="fileInput" class="file-label">
+          <input type="file" id="fileInput" accept="image/*" (change)="handleFileInput($event)" style="display: none;">
+          <img class="profile-image rounded-circle" [src]="getUserProfilePhoto()" (click)="openFileInput($event)">
+        </label>
+      </div>
+    </div>
+    <div class="profile-details">
+      <div class="profile-field">
+        <span class="profile-label">Name:</span>
+        <span class="profile-value">{{ userDetails.firstName }}</span>
+      </div>
+      <div class="profile-field">
+        <span class="profile-label">Email:</span>
+        <span class="profile-value">{{ userDetails.email }}</span>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <button mat-dialog-close class="logout-button btn btn-warning" (click)="logout()">Logout</button>
+    </div>
+  </div>
+
+</div>

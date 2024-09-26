@@ -15,4 +15,6 @@ public interface PresentationService {
     byte[] getPresentation(Long id);
 
     void savePresentation(String presentationId);
+    List<Presentation> getPresentationsForUserEmail(String userEmail);
+    void deletePresentation(String id);
 }

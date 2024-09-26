@@ -1,0 +1,37 @@
+.dialog-title {
+  color: #673ab7;
+  font-size: 24px;
+}
+
+.product-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-item:hover {
+  background-color: #f5f5f5;
+}
+
+.product-info {
+  flex-grow: 1;
+}
+
+.product-id {
+  font-weight: bold;
+  color: #333;
+}
+
+.details-icon {
+  font-size: 24px;
+  color: #4caf50;
+}

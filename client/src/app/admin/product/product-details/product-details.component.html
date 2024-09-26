@@ -1,0 +1,15 @@
+<div class="container mt-4">
+  <div *ngIf="product" class="card">
+    <div class="card-header">
+      Product Details
+    </div>
+    <div class="card-body d-flex flex-column align-items-center">  <img [src]="product.decodedProductImage" class="image">
+      <h3 class="card-title text-center font-weight-bold">{{ product.productName }}</h3>  <p class="card-text">Per unit price: {{ product.productPrice }}</p>
+      <p class="card-text">Description: {{ product.productDescription }}</p>
+      <p class="card-text">Status: {{ product.status }}</p>
+    </div>
+  </div>
+  <div *ngIf="!product" class="alert alert-danger mt-3" role="alert">
+    Product not found!
+  </div>
+</div>

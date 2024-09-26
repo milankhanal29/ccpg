@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -14,7 +14,8 @@ import java.sql.Timestamp;
 public class Presentation {
     @Id
     private String id;
-    @Lob
+    private String userEmail;
+    @Column(name = "data", columnDefinition = "LONGBLOB")
     private byte[] data;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 }

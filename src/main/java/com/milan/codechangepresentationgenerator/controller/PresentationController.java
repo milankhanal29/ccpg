@@ -6,10 +6,8 @@ import com.milan.codechangepresentationgenerator.repository.PresentationReposito
 import com.milan.codechangepresentationgenerator.service.PresentationService;
 import com.milan.codechangepresentationgenerator.util.DiffResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +28,6 @@ public class PresentationController {
             String emailToUse = request.getEmailToUse();
             List<DiffResult> diffResults = request.getDiffResults(); // Assuming it's a list of DiffResult objects
 
-            // Delegate to the service for presentation creation
             String presentationId = presentationService.createPresentation(diffResults, repoName, commitId,emailToUse);
             return ResponseEntity.ok(presentationId);
         } catch (Exception e) {
@@ -54,5 +51,16 @@ public class PresentationController {
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=presentation.pptx");
 
         return new ResponseEntity<>(presentation.getData(), headers, HttpStatus.OK);
+    }
+    @GetMapping("/user/{userEmail}")
+    public ResponseEntity<List<Presentation>> getPresentationsForUser(@PathVariable String userEmail) {
+        List<Presentation> presentations = presentationService.getPresentationsForUserEmail(userEmail);
+        return new ResponseEntity<>(presentations, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePresentation(@PathVariable String id) {
+        presentationService.deletePresentation(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     }

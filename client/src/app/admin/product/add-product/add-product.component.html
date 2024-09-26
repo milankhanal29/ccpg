@@ -1,0 +1,28 @@
+<div class="add-product-container">
+  <h2>Add Service</h2>
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" formControlName="productName" />
+    </div>
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <input type="text" id="price" name="price" formControlName="productPrice" />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" formControlName="productDescription"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="image">Image:</label>
+      <input type="file" id="image" name="image" (change)="onFileChange($event)" required />
+      <img *ngIf="selectedFileUrl" [src]="selectedFileUrl!" class="selectedImage" alt="Selected Image" />
+    </div>
+
+    <div class="form-group">
+      <button type="submit" [disabled]="!productForm.valid">Add service</button>
+    </div>
+  </form>
+</div>

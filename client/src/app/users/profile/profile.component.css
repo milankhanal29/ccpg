@@ -1,0 +1,99 @@
+.profile-card {
+  width: 400px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo-container {
+  width: 100%;
+  text-align: center;
+  animation: slideIn 1s forwards;
+}
+.logo-img {
+  width: 200px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.profile-content {
+  padding: 20px;
+}
+
+.profile-image-container {
+  text-align: center;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.profile-details {
+  margin-top: 20px;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+}
+
+.profile-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.profile-value {
+  color: #555;
+  cursor: pointer;
+}
+
+.profile-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logout-button {
+  border: none;
+  background-color: #ffc107;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #ffab00;
+}
+
+.close-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #007bff;
+}
+
+.close-button:hover {
+  text-decoration: underline;
+}

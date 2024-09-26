@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <div *ngIf="cartItems.length; else noItems">
+    <ul class="cart-list list-group">  <li *ngFor="let cartItem of cartItems" class="list-group-item cart-item">  <div class="cart-item-content d-flex justify-content-between align-items-center">  <div class="product-details d-flex align-items-center">
+      <img [src]="cartItem.decodedProductImage" style="height: 50px" class="product-image">
+      <div class="product-info m-3">
+        <h4 class="mb-0 product-name">{{ cartItem.product.productName }}</h4>
+        <h5 class="mb-0 product-price">NPR: {{ cartItem.product.productPrice }}</h5>
+        <h6 class="mb-0 product-name">{{ cartItem.product.productDescription }}</h6>
+      </div>
+    </div>
+      <div class="product-price-actions">
+        <button (click)="removeCartItem(cartItem.id)" class="btn btn-sm btn-danger ml-2">Remove</button>
+      </div>
+    </div>
+    </li>
+    </ul>
+    <div class="cart-actions mt-3 d-flex justify-content-between align-items-center">  <button (click)="clearCart()" class="btn btn-warning">Clear Cart</button>
+      <button (click)="navigateToCheckout(cartItems)" class="btn btn-success">Checkout</button>
+    </div>
+  </div>
+
+  <ng-template #noItems>
+    <div class="alert alert-info mt-3">
+      <p>No items in the active cart.</p>
+    </div>
+  </ng-template>
+</div>

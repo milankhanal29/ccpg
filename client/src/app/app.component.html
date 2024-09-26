@@ -1,0 +1,12 @@
+<div *ngIf="(userRole$ | async) !== 'ADMIN'">
+<app-navbar></app-navbar>
+<div class="container app-container " [ngStyle]=
+  "{'min-height':'calc(100vh - ' + totalUpDownHeight + 'px )'}">
+  <router-outlet></router-outlet>
+</div>
+<app-footer></app-footer>
+</div>
+<div *ngIf="(userRole$ | async) === 'ADMIN'">
+  <app-navbar></app-navbar>
+  <router-outlet></router-outlet>
+</div>

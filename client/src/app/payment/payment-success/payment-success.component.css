@@ -1,0 +1,66 @@
+.success-message.card {
+  background-color: #f5ffe0;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+}
+.center{
+  text-align: center;
+}
+.success-icon {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.success-icon i {
+  font-size: 70px;
+  color: #28a745;
+}
+
+.success-message h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.success-message p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.card-header {
+  background-color: #43ad0d;
+  border-bottom: 1px solid #c3e6cb;
+  padding: 5px 10px;
+  margin-top: 20px;
+}
+
+.card-header h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.card-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-body li {
+  margin-bottom: 5px;
+}
+
+.card-body li:last-child {
+  margin-bottom: 0;
+}
+
+.card-body strong {
+  font-weight: bold;
+}
